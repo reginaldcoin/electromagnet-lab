@@ -153,7 +153,7 @@
 (function(){
   var coils = 10, obj = "clips", power = false, trial = 0;
   var prediction = null, best = {5:0,10:0,15:0,20:0}, boltLifted = false;
-  var anim = 0, animTarget = 0, caught = 0, boltLift = 0, boltWiggle = 0;
+  var anim = 0, animTarget = 0, caught = 0, boltLift = 0, boltWiggle = 0, boltUp = false;
 
   var cvs = document.getElementById("scene"), ctx = cvs.getContext("2d");
   var W = cvs.width, H = cvs.height;
@@ -248,7 +248,7 @@
   function animate(){
     var diff = animTarget - anim;
     if(Math.abs(diff) > 0.002){ anim += diff*0.09; }
-    if(boltLifted && power){ if(boltLift < 1) boltLift = Math.min(1, boltLift + 0.03); }
+    if(boltUp && power){ if(boltLift < 1) boltLift = Math.min(1, boltLift + 0.03); }
     else if(boltLift > 0){ boltLift = Math.max(0, boltLift - 0.06); }
     requestAnimationFrame(animate);
   }
@@ -285,6 +285,7 @@
   function runTrial(silent){
     trial++;
     if(obj === "clips"){
+      boltUp = false;
       caught = clipStrength(coils, trial);
       if(caught > best[coils]) best[coils] = caught;
       animTarget = 1;
@@ -293,8 +294,8 @@
       if(caught >= 20) markDone("t2");
     } else {
       caught = 0; animTarget = 0;
-      if(coils >= 20){ boltLifted = true; markDone("t3"); logTrial(coils, "The Bolt", "LIFTED 👑"); }
-      else { boltWiggle = 1; logTrial(coils, "The Bolt", "Too heavy. It strains and stays."); }
+      if(coils >= 20){ boltLifted = true; boltUp = true; markDone("t3"); logTrial(coils, "The Bolt", "LIFTED 👑"); }
+      else { boltUp = false; boltWiggle = 1; logTrial(coils, "The Bolt", "Too heavy. It strains and stays."); }
     }
     meter.style.width = Math.round(coils/20*100) + "%";
     meterNote.textContent = "Field on: the coil is a magnet right now (" + coils + " coils).";
@@ -307,7 +308,7 @@
     powerBtn.classList.toggle("on", power);
     if(power){ runTrial(false); }
     else {
-      animTarget = 0; boltWiggle = 0;
+      animTarget = 0; boltWiggle = 0; boltUp = false;
       meter.style.width = "0%";
       meterNote.textContent = "Power off: every clip drops. The magnet is gone. It was never the nail. It was the current.";
     }
