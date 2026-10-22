@@ -84,8 +84,8 @@
   </header>
 
   <section class="card" id="predictCard">
-    <div class="step-head"><span class="step-tag">STEP 1</span><h2>Predict</h2><span class="picked-note" id="predictNote"></span></div>
-    <p style="margin:0 0 8px">You wind copper wire around an iron nail and connect it to a battery. <b>What happens to the magnet's strength when you add MORE coils?</b></p>
+    <div class="step-head"><span class="step-tag">STEP 1</span><h2>Hypothesis</h2><span class="picked-note" id="predictNote"></span></div>
+    <p style="margin:0 0 8px">You wind copper wire around an iron nail and connect it to a battery. <b>Make a hypothesis: what happens to the magnet's strength when you add MORE coils?</b></p>
     <div class="choices">
       <button class="choice" data-pick="stronger">More coils → STRONGER magnet</button>
       <button class="choice" data-pick="weaker">More coils → WEAKER magnet</button>
@@ -259,7 +259,7 @@
     b.addEventListener("click", function(){
       document.querySelectorAll(".choice").forEach(function(x){ x.classList.remove("picked"); });
       b.classList.add("picked"); prediction = b.getAttribute("data-pick");
-      note.textContent = "Prediction locked in.";
+      note.textContent = "Hypothesis locked in.";
     });
   });
 
@@ -341,9 +341,9 @@
     if(tested >= 2 || boltLifted){
       var tk = document.getElementById("takeaway"), v = document.getElementById("verdict");
       tk.style.display = "block";
-      if(prediction === null){ v.textContent = "You skipped the prediction. Scientists write it down first."; v.className = "verdict"; }
-      else if(prediction === "stronger"){ v.textContent = "Your prediction was RIGHT."; v.className = "verdict right"; }
-      else { v.textContent = "Your prediction missed. The data wins. That is the job."; v.className = "verdict wrong"; }
+      if(prediction === null){ v.textContent = "You ran the tests without a hypothesis this time. Next run, write one down first: testing a claim is where the science lives."; v.className = "verdict"; }
+      else if(prediction === "stronger"){ v.textContent = "Your hypothesis matched the data. Nice call."; v.className = "verdict right"; }
+      else { v.textContent = "Your hypothesis didn't match the data, and that is completely okay. The point was never to guess right. The point is you made a claim and tested it. That is the science."; v.className = "verdict"; }
     }
   }
 
