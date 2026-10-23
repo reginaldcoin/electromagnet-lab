@@ -49,6 +49,7 @@
   .obtn.picked{border-color:var(--accent);background:var(--accent-soft)}
   #powerBtn{border:none;border-radius:10px;padding:16px;font-size:21px;font-weight:900;letter-spacing:.05em;cursor:pointer;background:#b03a2e;color:#fff;box-shadow:var(--shadow)}
   #powerBtn.on{background:var(--good)}
+  #powerBtn.locked{background:#7a8699;cursor:not-allowed;box-shadow:none}
   #powerBtn:active{transform:scale(.99)}
   .meter-wrap{background:var(--track);border-radius:8px;height:22px;overflow:hidden}
   #meter{height:100%;width:0%;background:linear-gradient(90deg,var(--copper),#e8933c);transition:width .25s}
@@ -117,7 +118,8 @@
             <button class="obtn" data-obj="bolt">🔩 The Bolt</button>
           </div>
         </div>
-        <button id="powerBtn">⚡ POWER: OFF</button>
+        <button id="powerBtn" class="locked">⚡ POWER: OFF</button>
+        <div class="hint" id="lockNote" style="margin-top:-4px">🔒 Locked. Pick a hypothesis in Step 1 first.</div>
         <div>
           <div class="ctl-label">FIELD STRENGTH</div>
           <div class="meter-wrap"><div id="meter"></div></div>
@@ -260,6 +262,8 @@
       document.querySelectorAll(".choice").forEach(function(x){ x.classList.remove("picked"); });
       b.classList.add("picked"); prediction = b.getAttribute("data-pick");
       note.textContent = "Hypothesis locked in.";
+      document.getElementById("powerBtn").classList.remove("locked");
+      document.getElementById("lockNote").style.display = "none";
     });
   });
 
@@ -303,6 +307,11 @@
   }
 
   powerBtn.addEventListener("click", function(){
+    if(!power && prediction === null){
+      meterNote.textContent = "Not yet. Pick a hypothesis in Step 1 first, then power up.";
+      document.getElementById("predictCard").scrollIntoView({behavior:"smooth", block:"center"});
+      return;
+    }
     power = !power;
     powerBtn.textContent = power ? "⚡ POWER: ON" : "⚡ POWER: OFF";
     powerBtn.classList.toggle("on", power);
